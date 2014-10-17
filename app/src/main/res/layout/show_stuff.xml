@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:columnCount="3"
+    android:background="#ffffffff"
+    android:rowCount="5"
+    android:rowOrderPreserved="false">
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_gravity="center"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/logomap" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/carImg"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:layout_gravity="center_horizontal"
+        android:src="@drawable/ic_action_car"/>
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="3dp"
+        android:background="@android:color/darker_gray"/>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:orientation="horizontal"
+        android:background="@android:color/holo_red_light">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/timeImg"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:src="@drawable/ic_action_clock"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/wtf"
+            android:layout_gravity="center_vertical"
+            android:typeface="sans"
+            android:textColor="#060000"
+            android:id="@+id/carTimeTxt"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@android:color/holo_red_light">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/co2Img"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:src="@drawable/ic_action_cloud"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_gravity="center_vertical"
+            android:text="@string/wtf"
+            android:textColor="#060000"
+            android:typeface="sans"
+            android:id="@+id/carco2Txt"/>
+    </LinearLayout>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="3dp"
+        android:background="@android:color/darker_gray"/>
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:id="@+id/busImg"
+        android:layout_gravity="center_horizontal"
+        android:src="@drawable/ic_action_train"/>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="3dp"
+        android:background="@android:color/darker_gray"/>
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:orientation="horizontal"
+        android:background="#FFFF66">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:id="@+id/timeBusImg"
+            android:src="@drawable/ic_action_clock"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:typeface="sans"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/wtf"
+            android:id="@+id/busTxt"
+            android:textColor="#060000"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:orientation="horizontal"
+        android:background="#FFFF66">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/co2BusImg"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:src="@drawable/ic_action_cloud"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:typeface="sans"
+            android:layout_gravity="center_vertical"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/wtf"
+            android:textColor="#060000"
+            android:id="@+id/co2BusTxt"/>
+    </LinearLayout>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="3dp"
+        android:background="@android:color/darker_gray"/>
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/piggy"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:layout_gravity="center_horizontal"
+        android:src="@drawable/ic_action_saving"/>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="3dp"
+        android:background="@android:color/darker_gray"/>
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:orientation="horizontal"
+        android:background="#00CC00">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:src="@drawable/ic_action_forest"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:typeface="sans"
+            android:layout_gravity="center_vertical"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/wtf"
+            android:textColor="#060000"
+            android:id="@+id/savingsTotal"/>
+    </LinearLayout>
+
+    <!--<LinearLayout-->
+        <!--android:layout_width="fill_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:paddingBottom="@dimen/activity_vertical_margin"-->
+        <!--android:paddingTop="@dimen/activity_vertical_margin"-->
+        <!--android:orientation="horizontal"-->
+        <!--android:background="#00CC00">-->
+        <!--<ImageView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:paddingRight="@dimen/activity_horizontal_margin"-->
+            <!--android:src="@drawable/ic_action_recycle"/>-->
+        <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:typeface="sans"-->
+            <!--android:layout_gravity="center_vertical"-->
+            <!--android:textAppearance="?android:attr/textAppearanceMedium"-->
+            <!--android:text="@string/wtf"-->
+            <!--android:textColor="#060000"-->
+            <!--android:id="@+id/savingsRate"/>-->
+    <!--</LinearLayout>-->
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:orientation="horizontal"
+        android:background="#00CC00">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:src="@drawable/ic_action_books"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:typeface="sans"
+            android:layout_gravity="center_vertical"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/wtf"
+            android:textColor="#060000"
+            android:id="@+id/books"/>
+    </LinearLayout>
+
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="3dp"
+        android:background="@android:color/darker_gray"/>
+
+</LinearLayout>

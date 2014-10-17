@@ -9,17 +9,17 @@
     tools:context=".FormActivity">
 
     <EditText
-        android:id="@+id/start_text"
+        android:id="@+id/start_text1"
         android:hint="@string/start"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" />
 
     <EditText
-        android:id="@+id/end_text"
+        android:id="@+id/end_text1"
         android:hint="@string/end"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/start_text"/>
+        android:layout_below="@id/start_text1"/>
 
     <TextView
         android:id="@+id/vehicleInfo"
@@ -27,13 +27,13 @@
         android:layout_height="wrap_content"
         android:text="@string/vehicle_info"
         android:textSize="30sp"
-        android:layout_below="@id/end_text"/>
+        android:layout_below="@id/end_text1"/>
 
     <Spinner
         android:prompt="@string/year"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/yearSpinner"
+        android:id="@+id/yearSpinner1"
         android:layout_below="@+id/vehicleInfo"
         android:layout_alignParentStart="true" />
 
@@ -41,28 +41,28 @@
         android:prompt="@string/make"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/makeSpinner"
-        android:layout_below="@+id/yearSpinner"
+        android:id="@+id/makeSpinner1"
+        android:layout_below="@+id/yearSpinner1"
         android:layout_alignParentStart="true" />
 
     <Spinner
         android:prompt="@string/model"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/modelSpinner"
-        android:layout_below="@+id/makeSpinner"
+        android:id="@+id/modelSpinner1"
+        android:layout_below="@+id/makeSpinner1"
         android:layout_alignParentStart="true" />
 
     <Spinner
         android:prompt="@string/options"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/optionsSpinner"
-        android:layout_below="@id/modelSpinner"
+        android:id="@+id/optionsSpinner1"
+        android:layout_below="@id/modelSpinner1"
         android:layout_alignParentStart="true" />
 
     <Button
-        android:layout_below="@id/optionsSpinner"
+        android:layout_below="@id/optionsSpinner1"
         android:id="@+id/go_button"
         android:text="@string/go"
         android:layout_width="fill_parent"

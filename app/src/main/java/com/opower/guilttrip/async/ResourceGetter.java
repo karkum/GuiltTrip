@@ -4,9 +4,6 @@ import android.content.AsyncTaskLoader;
 import android.content.Context;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.opower.guilttrip.model.VehicleInfo;
-import com.opower.guilttrip.serialization.VehicleInfoDeserializer;
 
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
