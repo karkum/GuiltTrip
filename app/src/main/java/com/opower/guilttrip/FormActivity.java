@@ -18,14 +18,11 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.opower.guilttrip.model.MPGInfo;
+import com.opower.guilttrip.model.NameValuePair;
 import com.opower.guilttrip.model.VehicleInfo;
-import com.opower.guilttrip.model.VehicleMenuItems;
 import com.opower.guilttrip.serialization.VehicleInfoDeserializer;
-import com.opower.guilttrip.serialization.VehicleMenuItemsDeserializer;
 import com.opower.guilttrip.resource.MPGResource;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
@@ -37,32 +34,78 @@ public class FormActivity extends Activity {
     private static final int MAKE_LOADER = 1;
     private static final int MODEL_LOADER = 2;
     private static final int OPTIONS_LOADER = 3;
+    private static final int RESOURCE_LOADER = 4;
+    private static final int MPG_LOADER = 5;
 
     private static final String MPG_ENDPOINT = "http://www.fueleconomy.gov";
 
     private static final String YEAR_KEY = "year";
     private static final String MAKE_KEY = "make";
     private static final String MODEL_KEY = "model";
+    private static final String VEHICLE_ID = "id";
 
     private Spinner optionsSpinner;
     private EditText startTextView;
     private EditText endTextView;
     private Button goButton;
+    private MPGResource mpgResource;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_form);
 
-        EditText startTextView = ((EditText)findViewById(R.id.start_text));
-        EditText endTextView = ((EditText)findViewById(R.id.end_text));
+        this.startTextView = ((EditText)findViewById(R.id.start_text));
+        this.endTextView = ((EditText)findViewById(R.id.end_text));
 
         goButton = (Button)findViewById(R.id.go_button);
 
+        getLoaderManager().initLoader(RESOURCE_LOADER, null, new ResourceLoader());
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        this.goButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                NameValuePair selection = (NameValuePair)FormActivity.this.optionsSpinner.getSelectedItem();
+                if (selection == null) {
+                    Toast.makeText(FormActivity.this, "Please input everything", Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+                String code = selection.getCode();
+                Bundle bundle = new Bundle();
+                bundle.putInt(VEHICLE_ID, Integer.valueOf(code));
+                FormActivity.this.getLoaderManager().restartLoader(MPG_LOADER, bundle, new MPGLoader(mpgResource));
+
+                String start = FormActivity.this.startTextView.getText().toString();
+                if (start == null) {
+                    Toast.makeText(FormActivity.this, "Please input everything", Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+                String end = FormActivity.this.endTextView.getText().toString();
+                if (end == null) {
+                    Toast.makeText(FormActivity.this, "Please input everything", Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+                //call google with start/end point
+                // - loader, callbacks, model, serialize?
+                // - new activity, given it the data from google, mpg (in a bundle), send it through an intent
+                // - new activity, calculates the values and shows stuff on the screen
+                // - integrate views with cori's stuff
+            }
+        });
+    }
+
+    private void initSpinner() {
         Spinner yearSpinner = (Spinner)findViewById(R.id.yearSpinner);
         Spinner makeSpinner = (Spinner)findViewById(R.id.makeSpinner);
         Spinner modelSpinner = (Spinner)findViewById(R.id.modelSpinner);
-        optionsSpinner = (Spinner)findViewById(R.id.optionsSpinner);
+        this.optionsSpinner = (Spinner)findViewById(R.id.optionsSpinner);
 
         Bundle bundle = new Bundle();
         yearSpinner.setOnItemSelectedListener(new SpinnerOnSelectedItemListener(bundle,
@@ -72,85 +115,47 @@ public class FormActivity extends Activity {
         modelSpinner.setOnItemSelectedListener(new SpinnerOnSelectedItemListener(bundle,
                 OPTIONS_LOADER, optionsSpinner, MODEL_KEY));
 
-        getLoaderManager().initLoader(YEAR_LOADER, bundle, new SpinnerLoader(yearSpinner));
+        getLoaderManager().restartLoader(YEAR_LOADER, bundle, new SpinnerLoader(yearSpinner));
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        //call google
-        this.goButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Object selection = FormActivity.this.optionsSpinner.getSelectedItem();
-                if (selection == null) {
-                    Toast.makeText(FormActivity.this, "Please input everything", Toast.LENGTH_LONG).show();
-                    return;
-                }
-
-                String selectedCode = selection.toString();
-                int code = Integer.valueOf(selectedCode.substring(0, selectedCode.indexOf("|") - 1));
-                Toast.makeText(FormActivity.this, "Doing this guy: " + code, Toast.LENGTH_LONG).show();
-            }
-        });
-    }
-
-    private static class VehicleInfoGetterer extends AsyncTaskLoader<List<String>> {
+    private static class VehicleInfoGetterer extends AsyncTaskLoader<VehicleInfo> {
 
         private Bundle bundle;
+        private MPGResource mpgResource;
 
-        public VehicleInfoGetterer(Context context, Bundle bundle) {
+        public VehicleInfoGetterer(Context context, Bundle bundle, MPGResource mpgResource) {
             super(context);
+            this.mpgResource = mpgResource;
             this.bundle = bundle;
         }
 
         @Override
-        public List<String> loadInBackground() {
-            Gson gson = new GsonBuilder()
-                    .registerTypeAdapter(VehicleMenuItems.class, new VehicleMenuItemsDeserializer())
-                    .registerTypeAdapter(VehicleInfo.class, new VehicleInfoDeserializer())
-                    .create();
-
-            RestAdapter restAdapter = new RestAdapter.Builder()
-                    .setEndpoint(MPG_ENDPOINT)
-                    .setConverter(new GsonConverter(gson))
-                    .setRequestInterceptor(new RequestInterceptor() {
-                        @Override
-                        public void intercept(RequestFacade request) {
-                            request.addHeader("Accept", "application/json");
-                        }
-                    })
-                    .build();
-            MPGResource mpgResource = restAdapter.create(MPGResource.class);
+        public VehicleInfo loadInBackground() {
             try {
                 switch(getId()) {
                     case YEAR_LOADER:
-                        return mpgResource.listYears().getItems();
+                        return this.mpgResource.listYears();
 
                     case MAKE_LOADER:
                         String yearParam = this.bundle.getString(YEAR_KEY);
-                        return mpgResource.listMakes(yearParam).getItems();
+                        return this.mpgResource.listMakes(yearParam);
 
                     case MODEL_LOADER:
                         yearParam = this.bundle.getString(YEAR_KEY);
                         String makeParam = this.bundle.getString(MAKE_KEY);
-                        return mpgResource.listModels(yearParam, makeParam).getItems();
+                        return this.mpgResource.listModels(yearParam, makeParam);
 
                     case OPTIONS_LOADER:
                         yearParam = this.bundle.getString(YEAR_KEY);
                         makeParam = this.bundle.getString(MAKE_KEY);
                         String modelParam = this.bundle.getString(MODEL_KEY);
-                        VehicleInfo items = mpgResource.listOptions(yearParam, makeParam, modelParam);
-                        if (items == null) {
-                            return new ArrayList<String>();
-                        }
-                        return items.getInfoAsString();
+                        return this.mpgResource.listOptions(yearParam, makeParam, modelParam);
                 }
             }
             catch (Exception e) {
                 e.printStackTrace();
             }
-            return new ArrayList<String>();
+            return null;
         }
 
         @Override
@@ -159,7 +164,7 @@ public class FormActivity extends Activity {
         }
     }
 
-    private class SpinnerLoader implements LoaderManager.LoaderCallbacks<List<String>> {
+    private class SpinnerLoader implements LoaderManager.LoaderCallbacks<VehicleInfo> {
         private final Spinner spinner;
 
         private SpinnerLoader(Spinner spinner) {
@@ -167,21 +172,69 @@ public class FormActivity extends Activity {
         }
 
         @Override
-        public Loader<List<String>> onCreateLoader(int i, Bundle bundle) {
-            return new VehicleInfoGetterer(FormActivity.this, bundle);
+        public Loader<VehicleInfo> onCreateLoader(int i, Bundle bundle) {
+            return new VehicleInfoGetterer(FormActivity.this, bundle, FormActivity.this.mpgResource);
         }
 
         @Override
-        public void onLoadFinished(Loader<List<String>> listLoader, List<String> strings) {
-            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(FormActivity.this,
-                    android.R.layout.simple_spinner_item, strings);
+        public void onLoadFinished(Loader<VehicleInfo> listLoader, VehicleInfo info) {
+            if (info == null) {
+                return;
+            }
+            ArrayAdapter<NameValuePair> arrayAdapter = new ArrayAdapter<NameValuePair>(FormActivity.this,
+                    android.R.layout.simple_spinner_item, info.getPairs());
             this.spinner.setAdapter(arrayAdapter);
         }
 
         @Override
-        public void onLoaderReset(Loader<List<String>> listLoader) {
+        public void onLoaderReset(Loader<VehicleInfo> listLoader) {
 
         }
+    }
+
+    private class ResourceLoader implements LoaderManager.LoaderCallbacks<MPGResource> {
+
+        @Override
+        public Loader<MPGResource> onCreateLoader(int i, Bundle bundle) {
+            return new AsyncTaskLoader<MPGResource>(FormActivity.this) {
+
+                @Override
+                public MPGResource loadInBackground() {
+                    Gson gson = new GsonBuilder()
+                            .registerTypeAdapter(VehicleInfo.class, new VehicleInfoDeserializer())
+                            .create();
+
+                    RestAdapter restAdapter = new RestAdapter.Builder()
+                            .setEndpoint(MPG_ENDPOINT)
+                            .setConverter(new GsonConverter(gson))
+                            .setRequestInterceptor(new RequestInterceptor() {
+                                @Override
+                                public void intercept(RequestFacade request) {
+                                    request.addHeader("Accept", "application/json");
+                                }
+                            })
+                            .build();
+                    return restAdapter.create(MPGResource.class);
+                }
+
+                @Override
+                public void onStartLoading() {
+                    forceLoad();
+                }
+            };
+        }
+
+        @Override
+        public void onLoadFinished(Loader<MPGResource> listLoader, MPGResource info) {
+            FormActivity.this.mpgResource = info;
+            initSpinner();
+        }
+
+        @Override
+        public void onLoaderReset(Loader<MPGResource> listLoader) {
+
+        }
+
     }
 
     private class SpinnerOnSelectedItemListener implements AdapterView.OnItemSelectedListener {
@@ -202,8 +255,8 @@ public class FormActivity extends Activity {
         public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
             String item = adapterView.getAdapter().getItem(i).toString();
             this.bundle.putString(this.key, item);
-            getLoaderManager().initLoader(this.loaderToTrigger, this.bundle,
-                    new SpinnerLoader(this.spinner)).forceLoad();
+            getLoaderManager().restartLoader(this.loaderToTrigger, this.bundle,
+                    new SpinnerLoader(this.spinner));
         }
 
         @Override
@@ -229,5 +282,49 @@ public class FormActivity extends Activity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private class MPGLoader implements LoaderManager.LoaderCallbacks<MPGInfo> {
+        private MPGResource mpgResource;
+
+        public MPGLoader(MPGResource mpgResource) {
+            this.mpgResource = mpgResource;
+        }
+
+        @Override
+        public Loader<MPGInfo> onCreateLoader(int i, Bundle bundle) {
+            return new MPGGetterer(FormActivity.this, this.mpgResource, bundle);
+        }
+
+        @Override
+        public void onLoadFinished(Loader<MPGInfo> listLoader, MPGInfo info) {
+            Toast.makeText(FormActivity.this, "Found MPG: " + info.getHighway08(), Toast.LENGTH_LONG).show();
+        }
+
+        @Override
+        public void onLoaderReset(Loader<MPGInfo> listLoader) {
+
+        }
+    }
+
+    private static class MPGGetterer extends AsyncTaskLoader<MPGInfo> {
+        private MPGResource mpgResource;
+        private Bundle bundle;
+
+        public MPGGetterer(Context context, MPGResource mpgResource, Bundle bundle) {
+            super(context);
+            this.mpgResource = mpgResource;
+            this.bundle = bundle;
+        }
+
+        @Override
+        public MPGInfo loadInBackground() {
+            return this.mpgResource.getMPG(this.bundle.getInt(VEHICLE_ID));
+        }
+
+        @Override
+        public void onStartLoading() {
+            forceLoad();
+        }
     }
 }
