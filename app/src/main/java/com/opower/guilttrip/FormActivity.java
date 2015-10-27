@@ -138,11 +138,11 @@ public class FormActivity extends Activity implements LoaderManager.LoaderCallba
             case OPTIONS_LOADER:
                 return new VehicleInfoGetter(this, bundle, this.mpgResource);
             case MPG_RESOURCE_LOADER:
-                return new ResourceGetter<MPGResource>(this, MPG_ENDPOINT, MPGResource.class, gson);
+                return new ResourceGetter<>(this, MPG_ENDPOINT, MPGResource.class, gson);
             case MPG_LOADER:
                 return new MPGGetter(this, this.mpgResource, bundle);
             case DIRECTIONS_RESOURCE_LOADER:
-                return new ResourceGetter<DirectionsResource>(this, GOOGLE_ENDPOINT, DirectionsResource.class, gson);
+                return new ResourceGetter<>(this, GOOGLE_ENDPOINT, DirectionsResource.class, gson);
             case DIRECTIONS_LOADER:
                 return new ItineraryGetter(this, bundle, this.directionsResource);
             default:

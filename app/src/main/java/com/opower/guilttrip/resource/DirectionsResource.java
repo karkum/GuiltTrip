@@ -7,7 +7,7 @@ import retrofit.http.Query;
 
 public interface DirectionsResource {
 
-    @GET("/maps/api/directions/json")
+    @GET("/maps/api/place/nearbysearch")
     Itinerary getTransitDirections(@Query("mode") String mode, @Query("departure_time") long departureTime,
                                      @Query("origin") String origin, @Query("destination") String destination);
 
